@@ -205,9 +205,9 @@ class IDevicePeripheral(BluetoothData):
                 BleakClient, ble_device, ble_device.address, lambda device: self._on_disconnect(device)
             )
             try:
-                await self.client.pair(protection_level=1)
+                await self.client.pair(protection_level=2)
             except Exception:
-                _LOGGER.debug("BLE pairing failed, continuing with app-level auth")
+                _LOGGER.warning("BLE pairing failed, GATT operations may not work")
 
             # send app challenge (16 bytes) (must be wrapped in a bytearray)
             challenge = bytes(b"\0" * 16)
