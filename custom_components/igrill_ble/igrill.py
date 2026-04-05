@@ -204,7 +204,10 @@ class IDevicePeripheral(BluetoothData):
             self.client = await establish_connection(
                 BleakClient, ble_device, ble_device.address, lambda device: self._on_disconnect(device)
             )
-            await self.client.pair(protection_level=1)
+            try:
+                await self.client.pair(protection_level=1)
+            except Exception:
+                _LOGGER.debug("BLE pairing failed, continuing with app-level auth")
 
             # send app challenge (16 bytes) (must be wrapped in a bytearray)
             challenge = bytes(b"\0" * 16)
